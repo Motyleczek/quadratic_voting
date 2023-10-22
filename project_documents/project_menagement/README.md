@@ -1,0 +1,1 @@
+Files with documentation concerning project menagament only here

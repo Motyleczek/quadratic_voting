@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block content %}
+
+    <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Meme Analyzer</title>
+</head>
+<body>
+<div class="content" style="text-align:center">
+    <h1>Upload Your Own Meme</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <p><input type="file" name="file" accept=".jpg" required></p>
+        <p><label for="title">Title:</label></p>
+        <p><input type="text" name="title" required></p>
+        <p><label for="author">Author:</label></p>
+        <p><input type="text" name="author" required></p>
+        <p><input type="submit" value="Upload">
+        <input type="submit" value="Post on Reddit and save in database"></p>
+    </form>
+    <h1>Meme Analysis Results:</h1>
+    <img src="./static/input_img.jpg"
+     width="600"
+     height="300"><br>
+    </p>
+    <iframe src="./static/wynik.txt" frameborder="0" height="100"
+      width="600"></iframe>
+    </p>
+
+</div>
+</body>
+</html>
+
+{% endblock %}

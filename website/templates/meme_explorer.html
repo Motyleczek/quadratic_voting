@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block content %}
+
+  <h1>Meme Filter</h1>
+  <form method="POST" action="/MemeExplorer">
+      <label for="humour">Humour:</label>
+      <select name="humour" id="humour">
+          <option value="not_funny">Not funny</option>
+          <option value="funny">Funny</option>
+          <option value="very_funny">Very funny</option>
+          <option value="hilarious">Hilarious</option>
+      </select>
+
+      <label for="sarcasm">Sarcasm:</label>
+      <select name="sarcasm" id="sarcasm">
+          <option value="not_sarcasm">Not sarcasm</option>
+          <option value="general">General</option>
+          <option value="twisted_meaning">Twisted Meaning</option>
+          <option value="very_twisted">Very twisted</option>
+      </select>
+
+      <label for="offence">Offence:</label>
+      <select name="offence" id="offence">
+          <option value="not_offensive">Not offensive</option>
+          <option value="slight">Slight</option>
+          <option value="very_offensive">Very offensive</option>
+          <option value="hateful_offensive">Hateful offensive</option>
+      </select>
+
+      <label for="motivation">Motivation:</label>
+      <select name="motivation" id="motivation">
+          <option value="not_motivational">Not motivational</option>
+          <option value="motivational">Motivational</option>
+      </select>
+
+      <label for="sentiment">Sentiment:</label>
+      <select name="sentiment" id="sentiment">
+          <option value="negative">Negative</option>
+          <option value="positive">Positive</option>
+          <option value="neutral">Neutral</option>
+          <option value="very_positive">Very positive</option>
+          <option value="very_negative">Very negative</option>
+      </select>
+
+      <input type="submit" value="Apply Filter">
+  </form>
+
+  <!-- {% for d in data %} -->
+  <h2>Title: {{d[1]}}</h2>
+  <a href="{{d[2]}}" target="_blank">
+    <img src="{{d[2]}}" alt="{{d[1]}}" height="400">
+  </a>
+  {% endfor %}
+  
+{% endblock %}
