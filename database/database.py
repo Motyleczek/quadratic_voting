@@ -1,7 +1,14 @@
+from typing import List, Dict
+
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, insert
 from sqlalchemy.schema import MetaData
 import os
+
+
+def insert_to_table(db_conn, metadata: MetaData, tablename: str, insert_data_lst: List[Dict[str, str]]):
+    for data in insert_data_lst:
+        db_conn.execute(metadata.tables[tablename].insert(data))
 
 
 load_dotenv()
@@ -13,7 +20,3 @@ db_con = eng.connect()
 meta = MetaData()
 meta.reflect(bind=eng)
 
-for table_name, table in meta.tables.items():
-    print(table_name)
-
-# print(stmt.compile(eng))
