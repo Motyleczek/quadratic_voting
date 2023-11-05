@@ -58,7 +58,7 @@ class Website(metaclass=SingletonMeta):
         self.app = Flask(__name__)
         self.app.config['SECRET_KEY'] = os.environ["APP_SECRET"]
         self.app.config[
-            'SQLALCHEMY_DATABASE_URI'] = f'postgresql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME"]}'
+            'SQLALCHEMY_DATABASE_URI'] = f'mysql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME"]}'
 
         self.db = SQLAlchemy(self.app)
 

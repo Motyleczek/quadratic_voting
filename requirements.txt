@@ -1,8 +1,10 @@
 flask~=2.2.2
-Flask-SQLAlchemy>=2.5.0
+Flask-SQLAlchemy==2.5.0
 SQLAlchemy~=1.4.41
 python-dotenv==0.21.0
 sphinx_rtd_theme==1.0.0
 sphinx==5.2.3
 spacy==3.4.3
 psycopg2-binary==2.9.4
+pytz~=2023.3.post1
+mysql
