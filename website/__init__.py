@@ -6,8 +6,10 @@ import csv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
+from flask_login import LoginManager
 load_dotenv()
-# from ..database import *
+#from ..database import *
+
 
 class SingletonMeta(type):
     """
@@ -61,7 +63,8 @@ class Website(metaclass=SingletonMeta):
             'SQLALCHEMY_DATABASE_URI'] = f'mysql://{os.environ["DB_USER"]}:{os.environ["DB_PASSWORD"]}@{os.environ["DB_HOST"]}:{os.environ["DB_PORT"]}/{os.environ["DB_NAME"]}'
 
         self.db = SQLAlchemy(self.app)
-
+        self.login_manager = LoginManager()
+        #self.User = createWebsiteTable(self.db)
         # register all models here
         # self.MemeTable = createMemeTable(self.db)
 
