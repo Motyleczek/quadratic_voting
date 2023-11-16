@@ -1,4 +1,5 @@
-import database.database as db
+import database.database_definitions as db
+import database.db_functions as dbf
 
 if __name__ == '__main__':
 
@@ -6,7 +7,7 @@ if __name__ == '__main__':
     # db.insert_to_table(db.db_con, db.meta, 'User', data)
 
     session = db.Session()
-    users = session.query(db.User).filter(db.User.username == 'System').first()
-    print(users.id)
+    users = dbf.get_user_login(session, 'System')
+    print(users.password)
 
     pass
