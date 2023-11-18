@@ -1,6 +1,6 @@
 from .website import Website    # this will work because of flutter bullshit, im sure
 from .website.views import views
-
+from login.auth import auth
 # TODO is this needed
 # from .sql_queries_module.sql_queries import sql_queries
 
@@ -13,6 +13,7 @@ load_dotenv()
 if __name__ == '__main__':
     website = Website()
     website.app.register_blueprint(views, url_prefix='/')
+    website.app.register_blueprint(auth, url_prefix='/')
     
     # TODO is this needed
     # website.app.register_blueprint(sql_queries, url_prefix='/')
