@@ -33,11 +33,11 @@ class User(Base1):
     createdby = Column(String(15), nullable = False)
     lastupdatedon = Column(DateTime, nullable = False)
     lastupdatedby = Column(String(15), nullable = False)
-    active = Column(Boolean, nullable = False)
+    is_active = Column(Boolean, nullable = False)
 
     is_authenticated = False
     is_anonymous = False
-    is_active = active
+    # is_active = active
 
     def get_id(self):
         return str(self.id)
