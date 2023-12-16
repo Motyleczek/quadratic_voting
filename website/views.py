@@ -39,3 +39,7 @@ def index():
 
     return render_template('index.html')
 
+@views.route("/quadratic_descr", methods=["GET", "POST"])
+def quadratic_descr():
+    return render_template("quadratic_descr.html")
+
