@@ -9,20 +9,7 @@ from sqlalchemy import Column, Integer, String, DateTime, Boolean
 from sqlalchemy.ext.automap import automap_base
 import os
 
-# Base = declarative_base()
 
-# class User(Base):
-#     __tablename__ = "User"
-#
-#     id = Column(Integer, primary_key = True, autoincrement = True, nullable = False)
-#     username = Column(String(30), nullable = False)
-#     password = Column(String(180), nullable = False)
-#     email = Column(String(30), nullable = False)
-#     createdon = Column(DateTime, nullable = False)
-#     createdby = Column(String(15), nullable = False)
-#     lastupdatedon = Column(DateTime, nullable = False)
-#     lastupdatedby = Column(String(15), nullable = False)
-#     active = Column(Boolean, nullable = False)
 
 
 def insert_to_table(db_conn, metadata: MetaData, tablename: str, insert_data_lst: List[Dict[str, str]]):
