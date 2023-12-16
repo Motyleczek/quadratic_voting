@@ -28,26 +28,34 @@ def insert_new_user(session, username: str, password: str, email: str, user_role
     if user_role:
         roleid = session.query(Role.id).filter(Role.name == user_role and Role.active == 1).first()[0]
         userid = session.query(User.id).filter(User.username == username).first()[0]
-        user_role_ins = UserRole(userid = userid, roleid = roleid, createdby=createdby) if createdby else (
+        user_role_ins = UserRole(userid = userid, roleid = roleid, createdby = createdby, lastupdatedby = createdby) if createdby else (
             UserRole(userid = userid, roleid = roleid))
         session.add(user_role_ins)
         session.commit()
 
 
 def get_user_role(session, username: str) -> List[str]:
-    roles = session.query(Role.name).join(UserRole).join(User).filter(User.username == username and User.is_active == 1 and UserRole.active == 1 and Role.active == 1).all()
+    userid1 = session.query(User.id).filter(User.username == username and User.is_acive == 1).first()[0]
+    roles_id = session.query(UserRole.roleid).filter(UserRole.userid == userid1 and UserRole.active == 1).all()
+    roles = []
+    for rid in roles_id:
+        roles.append(session.query(Role.name).filter(Role.id == rid[0] and Role.active == 1).first())
     return [r[0] for r in roles]
 
 
-def create_voting(session, name: str, type_: str, start_date: date, end_date: date, author: str, credits: int) -> int:
+def create_voting(session, name: str, start_date: date, end_date: date, author: str, credits: int, type_: str = 'Rankingowe') -> int:
     voteid = session.query(Vote.id).filter(Vote.name == name and Vote.active == 1).first()
     if voteid:
         raise ValueError('Vote already exists. Please use different name')
     if end_date < start_date:
-        raise ValueError
+        raise ValueError('End date cannot be earlier than start date!')
     vote = Vote(name = name, type = type_, startdate = start_date, enddate = end_date, author = author, optionnumber = 0, credits = credits, createdby = author, lastupdatedby = author)
     session.add(vote)
     session.commit()
     voteid = session.query(Vote.id).filter(Vote.name == name and Vote.active == 1).first()
-    return voteid
+    return voteid[0]
+
+
+def add_options_to_voting(session, voteid: int, optionname: str, createdby: str):
+    votedetail = VoteDetail(voteid = voteid, optionname = optionname, createdby = createdby, lastupdatedby = createdby)
 
