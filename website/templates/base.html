@@ -28,7 +28,7 @@
 
       main {
         flex: 1; /* Rozciąganie obszaru głównej treści, aby wypchać stopkę na dół */
-        padding-bottom: 60px;
+        padding-bottom: 10px;
       }
 
       footer {
@@ -43,6 +43,45 @@
         text-decoration: none;
         margin: 0 10px;
       }
+
+      form {
+        max-width: 600px; /* Opcjonalne: Ustaw maksymalną szerokość formularza */
+        margin: 0 auto; /* Wycentruj formularz na stronie */
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 16px;
+        box-sizing: border-box; /* Uwzględnij padding w szerokości */
+      }
+
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      button.cancel {
+        background-color: #ff5555;
+        margin-left: 8px;
+      }
+
+      #success-message {
+        color: #4caf50;
+        margin-top: 10px;
+      }
+
+
     </style>
   </head>
   <body>
@@ -64,6 +103,19 @@
             href="/"
             >Home</a
           >
+        <a
+          class="nav-item nav-link"
+          id="Opis_metodyki"
+          href="/quadratic_descr"
+          >Opis metodyki</a
+        >
+        <a
+          class="nav-item nav-link"
+          id="Vote_creation"
+          href="/vote_creation"
+          >Tworzenie głosowania</a
+        >
+          {% if user %}
           {% if current_user.is_authenticated %}
               <a class="nav-item nav-link" id="signUp" href="/add_users">Add Users</a>
           <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
@@ -121,11 +173,13 @@
 
 
     <footer>
-      <p>© 2023 Nazwa Twojej Strony. Wszelkie prawa zastrzeżone.</p>
+      <p>© 2023 Kwadratura Koła. Wszelkie prawa zastrzeżone.</p>
+      <p><img src="./static/logo_KK.png" alt="logo_KK" class="centered-image" width="30"
+    height="30"></p>
       <p>Znajdź nas na: 
-        <a href="https://www.facebook.com/">Facebook</a> | 
-        <a href="https://twitter.com/">Twitter</a> | 
-        <a href="https://www.instagram.com/">Instagram</a>
+        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Facebook</a> |
+        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Twitter</a> |
+        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Instagram</a>
       </p>
     </footer>
 

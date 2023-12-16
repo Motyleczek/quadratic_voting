@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Vote_creation </title>
+{% endblock %}
+
+{% block content %}
+<div class="content"></div>
+
+  <h1 align="center"> Tworzenie głosowania </h1>
+  
+  <br>
+  
+  <form id="myForm">
+    <label for="title">Tytuł głosowania</label>
+    <input type="text" id="title" name="title">
+    <br>
+    <label for="data_start">Data otwarcia mozliwości oddania głosu:</label>
+    <input type="date" id="data_start" name="data">
+    <br>
+    <label for="data_end">Data zamknięcia mozliwości oddania głosu:</label>
+    <input type="date" id="data_end" name="data_end">
+    <br>
+    <label for="vote_type">Typ głosowania: </label>
+    <select id="vote_type" name="vote_type">
+        <option value="rankingowe"> Rankingowe </option>
+      </select>
+    <br>
+    <label for="credits">Ilość dostępnych kredytów (optymalnie ~ilość opcji do kwadratu)</label>
+    <input type="number" id="credits" name="credits">
+    <br>
+    <label for="inputList">Dodawanie opcji/kandydatów do głosowania</label>
+    <div id="inputList">
+        <!-- Tutaj będą dynamicznie dodawane inputy -->
+      </div>
+    
+      <button type="button" onclick="addInput()">Kolejna opcja</button>
+      <br>
+  </form>
+
+  <div align="right">
+  <button type="button" onclick="submitForm()">Potwierdź</button>
+  <button type="button" class="cancel" onclick="resetForm()">Anuluj</button>
+</div>
+<div id="success-message"></div>
+
+  <script>
+    function submitForm() {
+      // Tutaj można dodać kod przetwarzania formularza (np. wysłanie danych na serwer).
+
+      // Po udanym potwierdzeniu, wyświetl komunikat o sukcesie.
+      document.getElementById('success-message').innerHTML = 'Formularz został pomyślnie potwierdzony!';
+      // Oczyść wartości pól formularza.
+      resetForm();
+      // Po udanym potwierdzeniu, wyświetl komunikat o sukcesie.
+      document.getElementById('success-message').innerHTML = 'Formularz został pomyślnie potwierdzony!';
+    }
+
+    function resetForm() {
+        // Po naciśnięciu guzika "Anuluj", oczyść wartości pól formularza.
+        document.getElementById('myForm').reset();
+        document.getElementById('success-message').innerHTML = '';
+        resetInputs();
+      }
+
+    let inputCount = 1;
+    function addInput() {
+        // Tworzymy nowy input
+        const newInput = document.createElement('input');
+        newInput.type = 'text';
+        newInput.name = 'input' + inputCount;
+
+        // Dodajemy nowy input do listy
+        document.getElementById('inputList').appendChild(newInput);
+
+        // Inkrementujemy licznik inputów
+        inputCount++;
+        }
+    
+    function resetInputs(){
+        document.getElementById('inputList').innerHTML = '';
+        // Resetujemy licznik inputów
+        inputCount = 1;
+    }
+  </script>
+
+
+{% endblock %}
