@@ -43,6 +43,45 @@
         text-decoration: none;
         margin: 0 10px;
       }
+
+      form {
+        max-width: 600px; /* Opcjonalne: Ustaw maksymalną szerokość formularza */
+        margin: 0 auto; /* Wycentruj formularz na stronie */
+      }
+  
+      label {
+        display: block;
+        margin-bottom: 8px;
+      }
+  
+      input,
+      select {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 16px;
+        box-sizing: border-box; /* Uwzględnij padding w szerokości */
+      }
+  
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      button.cancel {
+        background-color: #ff5555;
+        margin-left: 8px;
+      }
+
+      #success-message {
+        color: #4caf50;
+        margin-top: 10px;
+      }
+
+
     </style>
   </head>
   <body>
@@ -69,6 +108,12 @@
           id="Opis_metodyki"
           href="/quadratic_descr"
           >Opis metodyki</a
+        >
+        <a
+          class="nav-item nav-link"
+          id="Vote_creation"
+          href="/vote_creation"
+          >Tworzenie głosowania</a
         >
           {% if user %}
           <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
