@@ -5,6 +5,7 @@ from typing import List, Dict
 from sqlalchemy.schema import MetaData
 import sqlalchemy
 
+# Users
 
 def insert_to_table(tablename: str, insert_data_lst: List[Dict[str, str]]):
     for data in insert_data_lst:
@@ -42,7 +43,7 @@ def get_user_role(session, username: str) -> List[str]:
         roles.append(session.query(Role.name).filter(Role.id == rid[0] and Role.active == 1).first())
     return [r[0] for r in roles]
 
-
+# Voting
 def create_voting(session, name: str, start_date: date, end_date: date, author: str, credits: int, type_: str = 'Rankingowe') -> int:
     voteid = session.query(Vote.id).filter(Vote.name == name and Vote.active == 1).first()
     if voteid:
@@ -52,10 +53,33 @@ def create_voting(session, name: str, start_date: date, end_date: date, author: 
     vote = Vote(name = name, type = type_, startdate = start_date, enddate = end_date, author = author, optionnumber = 0, credits = credits, createdby = author, lastupdatedby = author)
     session.add(vote)
     session.commit()
-    voteid = session.query(Vote.id).filter(Vote.name == name and Vote.active == 1).first()
-    return voteid[0]
+    voteid = session.query(Vote.id).filter(Vote.name == name and Vote.active == 1).first()[0]
+    userid = session.query(User.id).filter(User.username == author and User.is_active == 1).first()[0]
+    uservote = UserVote(userid = userid, voteid = voteid, role = 'Author', createdby = author, lastupdatedby = author)
+    session.add(uservote)
+    session.commit()
+    return voteid
 
 
-def add_options_to_voting(session, voteid: int, optionname: str, createdby: str):
-    votedetail = VoteDetail(voteid = voteid, optionname = optionname, createdby = createdby, lastupdatedby = createdby)
+def add_options_to_voting(session, voteid: int, option_list: List[str], createdby: str):
+    for optionname in option_list:
+        votedetail = VoteDetail(voteid = voteid, optionname = optionname, createdby = createdby, lastupdatedby = createdby)
+        session.add(votedetail)
+        session.commit()
+    vote = session.query(Vote).filter(Vote.id == voteid)
+    vote_record = vote.one()
+    vote_record.optionnumber = len(option_list)
+    vote_record.lastupdatedby = createdby
+    vote_record.lastupdatedon = datetime.now()
+    session.commit()
+    
+
+def add_users_to_voting(session, voteid: int, users_list: List[str], createdby: str, role: str = 'Voter'):
+    for username in users_list:
+        userid = session.query(User.id).filter(User.username == username and User.is_active == 1).first()[0]
+        voteuser = UserVote(userid = userid, voteid = voteid, role = role, createdby = createdby, lastupdatedby = createdby)
+        session.add(voteuser)
+        session.commit()
+
+
 
