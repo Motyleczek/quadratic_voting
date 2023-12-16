@@ -16,8 +16,37 @@
     />
 
     <title>{% block title %}Home{% endblock %}</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh; /* Minimalna wysokość okna przeglądarki */
+      }
+
+      main {
+        flex: 1; /* Rozciąganie obszaru głównej treści, aby wypchać stopkę na dół */
+        padding-bottom: 60px;
+      }
+
+      footer {
+        background-color: #333;
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+  
+      footer a {
+        color: white;
+        text-decoration: none;
+        margin: 0 10px;
+      }
+    </style>
   </head>
   <body>
+    <main>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <button
         class="navbar-toggler"
@@ -63,7 +92,7 @@
       </button>
     </div>
     {% endif %} {% endfor %} {% endif %} {% endwith %}
-
+    <br>
     <div class="container">{% block content %} {% endblock %}</div>
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
@@ -85,5 +114,17 @@
       type="text/javascript"
       src="{{ url_for('static', filename='index.js') }}"
     ></script>
+  </main>
+
+
+    <footer>
+      <p>© 2023 Nazwa Twojej Strony. Wszelkie prawa zastrzeżone.</p>
+      <p>Znajdź nas na: 
+        <a href="https://www.facebook.com/">Facebook</a> | 
+        <a href="https://twitter.com/">Twitter</a> | 
+        <a href="https://www.instagram.com/">Instagram</a>
+      </p>
+    </footer>
+
   </body>
 </html>
