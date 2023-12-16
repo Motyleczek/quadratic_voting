@@ -1,5 +1,5 @@
-from .website import Website    # this will work because of flutter bullshit, im sure
-from .website.views import views
+from website import Website    # this will work because of flutter bullshit, im sure
+from website.views import views
 from login.auth import auth
 # TODO is this needed
 # from .sql_queries_module.sql_queries import sql_queries
