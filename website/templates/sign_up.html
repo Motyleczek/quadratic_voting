@@ -1,46 +1,46 @@
-{% extends "base.html" %} {% block title %}Sign Up{% endblock %} {% block
+{% extends "base.html" %} {% block title %}Zarejestruj się{% endblock %} {% block
 content %}
 <form method="POST">
-  <h3 align="center">Sign Up</h3>
+  <h3 align="center">Zarejestruj się</h3>
   <div class="form-group">
-    <label for="email">Email Address</label>
+    <label for="email">Email</label>
     <input
       type="email"
       class="form-control"
       id="email"
       name="email"
-      placeholder="Enter email"
+      placeholder="Wprowadź email"
     />
   </div>
   <div class="form-group">
-    <label for="username">Username</label>
+    <label for="username">Nazwa użytkownika</label>
     <input
       type="text"
       class="form-control"
       id="username"
       name="username"
-      placeholder="Enter login"
+      placeholder="Wprowadź nazwę użytkownika"
     />
   </div>
   <div class="form-group">
-    <label for="password">Password</label>
+    <label for="password">Hasło</label>
     <input
       type="password"
       class="form-control"
       id="password"
       name="password"
-      placeholder="Enter password"
+      placeholder="Wprowadź hasło"
     />
   </div>
   <div>
-     <label for="role">Role:</label>
+     <label for="role">Rola:</label>
         <select name="role">
 {#            <option value="Admin">Admin</option>#}
-            <option value="Voter">Voter</option>
-            <option value="Author">Author</option>
+            <option value="Voter">Głosujący</option>
+            <option value="Author">Autor</option>
         </select><br>
     </div>  
   <br />
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <button type="submit" class="btn btn-primary">Utwórz konto</button>
 </form>
 {% endblock %}

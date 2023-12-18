@@ -37,6 +37,7 @@ class User(Base1):
 
     is_authenticated = False
     is_anonymous = False
+    is_author = False
     # is_active = active
 
     def get_id(self):

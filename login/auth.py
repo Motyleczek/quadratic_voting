@@ -34,15 +34,16 @@ def login():
         if user:
             if check_password_hash(user.password, password):
                 if login_user(user, remember=remember):
-                    flash("Logged in successfully!", category='success')
+                    flash("Zalogowano pomyślnie!", category='success')
                     user.is_authenticated = True
                     # print(dbf.get_user_login(session, username=username))
-                    # print(dbf.get_user_role(session, current_user.username))
+                    user_roles = dbf.get_user_role(session, current_user.username)
+                    user.is_author = True if  'Author' in user_roles else False
                     return redirect(url_for("views.index"))
             else:
-                flash("Incorrect password!", category='error')
+                flash("Niepoprawne hasło!", category='error')
         else:
-            flash("User does not exist!", category='error')
+            flash("Użytkownik nie istnieje!", category='error')
     return render_template('login.html')
 
 
@@ -59,20 +60,18 @@ def sign_up():
         username = request.form.get('username')
         password = request.form.get('password')
         role = request.form.get('role')
-        print(role, type(role))
         user_by_email = session.query(db.User).filter(db.User.email == email and db.User.is_active == 1).first()
         user_by_username = dbf.get_user_login(session, username=username)
-        print(user_by_email, user_by_username)
         if user_by_email or user_by_username:
-            flash('User already exists.', category='error')
+            flash('Taki użytkownik już istnieje.', category='error')
             return redirect(url_for('auth.sign_up'))
         elif len(username) < 2:
-            flash('Username must be greater than 1 character.', category='error')
+            flash('Nazwa użytkownika musi zawierać co najmniej 2 znaki.', category='error')
         elif len(password) < 5:
-            flash('Password must be at least 5 characters.', category='error')
+            flash('Hasło musi zawierać co najmniej 5 znaków.', category='error')
         else:
             dbf.insert_new_user(session, username, generate_password_hash(password), email, role)
-            flash('Account created successfully', category='success')
+            flash('Konto zostało utworzone pomyślnie.', category='success')
     return render_template("sign_up.html")
 
 
@@ -85,12 +84,13 @@ def add_users():
         password = request.form.get('password')
 
         if uploaded_file:
-            print("Tutaj będzie dodawanie z pliku")
             if uploaded_file and uploaded_file.filename.endswith('.csv'):
                 csv_data = pd.read_csv(uploaded_file)
-                # for i in range(len())
-                # print(len(csv_data))
-            # tutaj dodać obsługę pliku dodawania użytkowników z listy
+                for i in range(csv_data.shape[0]):
+                    username = csv_data['Nazwa użytkownika'][i]
+                    email = csv_data['Email'][i]
+                    password = csv_data['Hasło'][i]
+                    add_voter(username, email, password)
         else:
             add_voter(username, email, password)
     return render_template("add_users.html")
@@ -107,12 +107,12 @@ def add_voter(username, email, password):
     user_by_username = dbf.get_user_login(session, username=username)
     print(user_by_email, user_by_username)
     if user_by_email or user_by_username:
-        flash('User already exists.', category='error')
+        flash('Taki użytkownik już istnieje.', category='error')
         return redirect(url_for('auth.add_users'))
     elif len(username) < 2:
-        flash('Username must be greater than 1 character.', category='error')
+        flash('Nazwa użytkownika musi zawierać co najmniej 2 znaki.', category='error')
     elif len(password) < 5:
-        flash('Password must be at least 5 characters.', category='error')
+        flash('Hasło musi zawierać co najmniej 5 znaków.', category='error')
     else:
         dbf.insert_new_user(session, username, generate_password_hash(password), email, "Voter", current_user.username)
-        flash('Account created successfully', category='success')
+        flash('Konto zostało utworzone pomyślnie.', category='success')
