@@ -81,8 +81,30 @@
         margin-top: 10px;
       }
 
+      .collapsible {
+      background-color: #4caf50;
+      color: white;
+      cursor: pointer;
+      padding: 18px;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 15px;
+    }
 
-    </style>
+    .active, .collapsible:hover {
+      background-color: #555;
+    }
+
+    .content {
+      padding: 0 18px;
+      display: none;
+      overflow: hidden;
+      background-color: #f1f1f1;
+    }
+
+</style>
   </head>
   <body>
     <main>
@@ -109,8 +131,6 @@
           href="/quadratic_descr"
           >Opis metodyki</a
         >
-        <a class="nav-item nav-link" id="voting" href="/voting">Głosuj</a>
-
           {% if current_user.is_authenticated %}
               {% if current_user.is_author %}
               <a
@@ -120,10 +140,13 @@
           >Tworzenie głosowania</a
         >
               <a class="nav-item nav-link" id="signUp" href="/add_users">Dodaj użytkownika</a>
+                  <a class="nav-item nav-link" id="author_votings" href="/author_votings">Moje głosowania</a>
                   {% endif %}
+            <a class="nav-item nav-link" id="voting" href="/voting">Głosuj</a>
           <a class="nav-item nav-link" id="logout" href="/logout">Wyloguj</a>
+
           {% else %}
-          <a class="nav-item nav-link" id="voting" href="/voting">Głosuj</a>
+
 
           <a class="nav-item nav-link" id="login" href="/login">Zaloguj się</a>
 
@@ -173,11 +196,28 @@
       type="text/javascript"
       src="{{ url_for('static', filename='index.js') }}"
     ></script>
+
+    <script>
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+          coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+              content.style.display = "none";
+            } else {
+              content.style.display = "block";
+            }
+          });
+        }
+</script>
   </main>
 
 
     <footer>
-      <p>© 2023 Kwadratura Koła. Wszelkie prawa zastrzeżone.</p>
+      <p>© 2024 Kwadratura Koła. Wszelkie prawa zastrzeżone.</p>
       <p><img src="./static/logo_KK.png" alt="logo_KK" class="centered-image" width="30"
     height="30"></p>
       <p>Znajdź nas na: 

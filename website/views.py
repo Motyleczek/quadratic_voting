@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, flash, jsonify
 # from .config import config
 # from database import fun
+from flask_login import login_required
 import os
 
 
@@ -35,6 +36,7 @@ def quadratic_descr():
 
 
 @views.route("/vote_creation", methods=["GET", "POST"])
+@login_required
 def vote_creation():
     title : str = None
     data_start : datetime = None
@@ -73,5 +75,6 @@ def vote_creation():
     return render_template("vote_creation.html")
 
 @views.route("/voting", methods=["GET", "POST"])
+@login_required
 def choose_vote():
     return render_template("choose_vote.html")

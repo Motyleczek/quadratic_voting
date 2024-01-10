@@ -3,11 +3,13 @@
 from flask import Blueprint, request, redirect, url_for, flash, render_template
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
-from flask_login import login_user, logout_user, LoginManager, current_user
+from flask_login import login_user, logout_user, LoginManager, current_user, login_required
 from website import Website
 import database.database_definitions as db
 import database.db_functions as dbf
 import pandas as pd
+import matplotlib.pyplot as plt
+
 
 auth = Blueprint('auth', __name__)
 website = Website()
@@ -16,7 +18,7 @@ session = db.Session()
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 login_manager.init_app(website.app)
-
+login_manager.login_message = "Ta opcja jest dostępna tylko dla zalogowanych użytkowników"
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -48,6 +50,7 @@ def login():
 
 
 @auth.route('/logout')
+@login_required
 def logout():
     current_user.is_authenticated = False
     logout_user()
@@ -76,6 +79,7 @@ def sign_up():
 
 
 @auth.route('/add_users', methods=['POST', 'GET'])
+@login_required
 def add_users():
     if request.method == 'POST':
         uploaded_file = request.files['fileInput']
@@ -94,6 +98,32 @@ def add_users():
         else:
             add_voter(username, email, password)
     return render_template("add_users.html")
+
+@auth.route('/author_votings', methods=['POST', 'GET'])
+@login_required
+def author_votings():
+    # get_author_votings -> lista głosowań stworzonych przez autora
+    # get_vote_summary -> wyniki głosowania
+    # bar plot do wyświetlania wyników już przygotowany :)
+    data = [
+        {
+            'name': 'Voting 1',
+            'Users': '3',
+            'mob': '7736'
+        },
+        {
+            'name': 'Voting 2',
+            'Users': '6',
+            'mob': '546464'
+        }]
+    for i in range(len(data)):
+        x= ['Opcja 1', 'Opcja 2', 'Opcja 3', 'Opcja 4', 'Opcja 5']
+        y = [1, 2, 5, 3, 4]
+        plt.bar(x, y)
+        dir = f'website/static/results/results_{i}.png'
+        data[i]['url'] = f'/static/results/results_{i}.png'
+        plt.savefig(dir)
+    return render_template("author_votings.html", data=data)
 
 def validate_email(email):
     regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'

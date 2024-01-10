@@ -1,0 +1,13 @@
+{% extends "base.html" %} {% block title %}Lista głosowań{% endblock %} {% block content
+%}
+
+  <h3 align="center">Głosowania użytkownika {{ current_user.username }}</h3>
+    <ul>
+{% for item in data %}
+<button type="button" class="collapsible">{{ item.name }}</button>
+<div class="content">
+    <img src={{ item.url}} alt="Chart">
+</div>
+{% endfor %}
+</ul>
+{% endblock %}
