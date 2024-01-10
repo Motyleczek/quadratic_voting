@@ -36,12 +36,13 @@ def insert_new_user(session, username: str, password: str, email: str, user_role
 
 
 def get_user_role(session, username: str) -> List[str]:
-    userid1 = session.query(User.id).filter(User.username == username, User.is_acive == 1).first()[0]
+    userid1 = session.query(User.id).filter(User.username == username, User.is_active == 1).first()[0]
     roles_id = session.query(UserRole.roleid).filter(UserRole.userid == userid1, UserRole.active == 1).all()
     roles = []
     for rid in roles_id:
         roles.append(session.query(Role.name).filter(Role.id == rid[0], Role.active == 1).first())
     return [r[0] for r in roles]
+
 
 def get_voters_createdby_user(session, username: str) -> List[str]:
     role_voter = session.query(Role.id).filter(Role.name == 'Voter', Role.active == 1).first()[0]
@@ -52,6 +53,7 @@ def get_voters_createdby_user(session, username: str) -> List[str]:
         if u:
             users_lst.append(u[0])
     return users_lst
+
 
 # Voting
 def create_voting(session, name: str, start_date: date, end_date: date, author: str, credits: int, type_: str = 'Rankingowe') -> int:
@@ -92,11 +94,21 @@ def add_users_to_voting(session, voteid: int, users_list: List[str], createdby: 
         session.commit()
 
 
-def get_voting_parameters(session, voteid: int) -> Tuple[List[str], int]:
-    option_lst = session.query(VoteDetail.optionname).filter(VoteDetail.voteid == voteid, VoteDetail.active == 1).all()
-    option_lst =  [o[0] for o in option_lst]
+def get_voter_votings(session, userid: int) -> List[Tuple[int, str]]:
+    votings = session.query(UserVote.voteid).filter(UserVote.userid == userid, UserVote.active == 1, UserVote.role == 'Voter').all()
+    to_return = []
+    for v in votings:
+        votename = session.query(Vote.name).filter(Vote.id == v[0], Vote.active == 1, Vote.startdate < datetime.now(), Vote.enddate > datetime.now()).first()
+        if votename:
+            to_return.append((v[0], votename[0]))
+    return to_return
+
+
+def get_voting_parameters(session, voteid: int) -> Tuple[List[Tuple[int, str]], int]:
+    option_lst = session.query(VoteDetail.id, VoteDetail.optionname).filter(VoteDetail.voteid == voteid, VoteDetail.active == 1).all()
     credit = session.query(Vote.credits).filter(Vote.id == voteid, Vote.active == 1).first()[0]
     return option_lst, credit
+
 
 def add_vote_results_to_db(session, userid: int, voteid: int, username:str, result_dict: Dict[int, int]):
     """
