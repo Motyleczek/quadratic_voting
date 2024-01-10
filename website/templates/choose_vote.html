@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Vote_creation </title>
+{% endblock %}
+
+{% block content %}
+<div class="content"></div>
+
+  <h1 align="center"> Wybierz swoje głosowanie </h1>
+  
+<!-- Initial list of strings -->
+<select id="dropdown" onchange="updateFields()">
+    <option value="list1">List 1</option>
+    <option value="list2">List 2</option>
+    <!-- Add more options as needed -->
+</select>
+
+<!-- Credits input -->
+<label for="credits">Credits:</label>
+<input type="number" id="credits" value="100" readonly>
+
+<!-- Container for dynamic sliders -->
+<div id="sliders-container"></div>
+
+<script>
+    // Define your lists
+    var lists = {
+        "list1": ["Field1", "Field2", "Field3"],
+        "list2": ["FieldA", "FieldB", "FieldC", "FieldD"]
+        // Add more lists as needed
+    };
+
+    var lists_2 = {
+        "list1": 100,
+        "list2": 150
+    };
+
+    // Function to update fields based on selected dropdown option
+    function updateFields() {
+        var selectedList = document.getElementById("dropdown").value;
+        var fields = lists[selectedList];
+        var credits = lists_2[selectedList];
+        var prev_vals = Array(fields.length).fill(0);
+        
+        
+        // Clear previous sliders
+        document.getElementById("sliders-container").innerHTML = "";
+
+        // Create sliders dynamically
+        fields.forEach(function (field) {
+            var sliderContainer = document.createElement("div");
+            sliderContainer.className = "slider-container";
+
+            var label = document.createElement("label");
+            label.textContent = field + ":";
+
+            var slider = document.createElement("input");
+            slider.type = "range";
+            slider.min = 0;
+            slider.max = credits;
+            slider.value = 0;
+            slider.name = field;
+            slider.oninput = function () {
+                prev_vals= updateTotal(prev_vals);
+            };
+
+            sliderContainer.appendChild(label);
+            sliderContainer.appendChild(slider);
+
+            document.getElementById("sliders-container").appendChild(sliderContainer);
+        });
+
+        // Initialize the total
+        updateTotal(prev_vals);
+    }
+
+    // Function to update total credits based on slider values
+    function updateTotal(prev_vals) {
+        var prev_vals_copy = prev_vals;
+        var total = 0;
+
+     
+        var sliders = document.querySelectorAll("input[type='range']");
+        sliders.forEach(function (slider) {
+            total += parseInt(slider.value);
+        });
+
+        var selectedList = document.getElementById("dropdown").value;
+        var credits = lists_2[selectedList];
+        
+        // Update the total credits
+        if (total <= credits){
+            document.getElementById("credits").value = total;
+        }
+        
+
+        var i = 0;
+        sliders.forEach(function (slider) {
+            prev_value = prev_vals_copy[i]
+            if (total > credits) {
+                slider.value = prev_value;
+            } else {
+                slider.max = credits;
+                prev_vals_copy[i] = slider.value;
+            }
+            i = i+1;
+        });
+        
+        return prev_vals_copy;
+    }
+
+    // Initial call to set up fields
+    updateFields();
+
+</script>
+
+
+
+
+{% endblock %}

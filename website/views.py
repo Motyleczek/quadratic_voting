@@ -10,13 +10,20 @@ import datetime
 import pytz
 import string
 
-import database
+import database.database_definitions
+import database.db_functions
 
 from typing import List
+from flask_login import current_user
 
 views = Blueprint('views', __name__)
 
+session = database.database_definitions.Session()
+
 ALLOWED_EXTENSIONS = {'jpg', 'png'}
+
+
+
 
 @views.route('/', methods=["GET", "POST"])
 def index():
@@ -50,6 +57,21 @@ def vote_creation():
                     vote_option_x = request.form.get(key)
                     vote_options.append(vote_option_x)
        
-       
+       vote_id = database.db_functions.create_voting(session, 
+                              name=title,
+                              start_date = data_start,
+                              end_date = data_end,
+                              author = current_user.username,
+                              credits = num_credits,
+                              type_ = vote_type)
+       database.db_functions.add_options_to_voting(session,
+                                      voteid=vote_id,
+                                      option_list=vote_options,
+                                      createdby=current_user.username)
+        
     
     return render_template("vote_creation.html")
+
+@views.route("/voting", methods=["GET", "POST"])
+def choose_vote():
+    return render_template("choose_vote.html")
