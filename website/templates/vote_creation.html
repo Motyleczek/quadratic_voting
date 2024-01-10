@@ -11,12 +11,12 @@
   
   <br>
   
-  <form id="myForm">
+  <form id="myForm", method="post">
     <label for="title">Tytuł głosowania</label>
     <input type="text" id="title" name="title">
     <br>
     <label for="data_start">Data otwarcia mozliwości oddania głosu:</label>
-    <input type="date" id="data_start" name="data">
+    <input type="date" id="data_start" name="data_start">
     <br>
     <label for="data_end">Data zamknięcia mozliwości oddania głosu:</label>
     <input type="date" id="data_end" name="data_end">
@@ -35,11 +35,13 @@
       </div>
     
       <button type="button" onclick="addInput()">Kolejna opcja</button>
-      <br>
+    <br>
+    <br>
+    <input type="submit" value="Submit">
   </form>
 
   <div align="right">
-  <button type="button" onclick="submitForm()">Potwierdź</button>
+  <!-- <button type="button" onclick="submitForm()">Potwierdź</button> -->
   <button type="button" class="cancel" onclick="resetForm()">Anuluj</button>
 </div>
 <div id="success-message"></div>
