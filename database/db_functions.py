@@ -163,13 +163,16 @@ def get_vote_summary(session, voteid: int) -> Tuple[Dict[str, float], float]:
     """
     Return dict where key is name of the option and value is voting result; frequency
     """
-    vote_dates = session.query(Vote.enddate).filter(Vote.id == voteid, Vote.active == 1).first()[0]
-    if vote_dates >= datetime.now():
-        raise AttributeError('Voting is not finished!')
+    # vote_dates = session.query(Vote.enddate).filter(Vote.id == voteid, Vote.active == 1).first()[0]
+    # if vote_dates >= datetime.now():
+    #     raise AttributeError('Voting is not finished!')
     results = session.query(VoteDetail.optionname, VoteDetail.result).filter(VoteDetail.voteid == voteid, VoteDetail.active == 1).all()
     did_vote_lst = session.query(UserVote.didvote).filter(UserVote.voteid == voteid and UserVote.active == 1, UserVote.role == 'Voter').all()
     did_vote_lst = [d[0] for d in did_vote_lst]
-    frequency = sum(did_vote_lst) / len(did_vote_lst)
+    if len(did_vote_lst) != 0:
+        frequency = sum(did_vote_lst) / len(did_vote_lst)
+    else:
+        frequency = 0
     return results, frequency
 
 

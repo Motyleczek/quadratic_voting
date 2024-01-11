@@ -4,8 +4,11 @@
   <h3 align="center">Głosowania użytkownika {{ current_user.username }}</h3>
     <ul>
 {% for item in data %}
-<button type="button" class="collapsible">{{ item.name }}</button>
+<button type="button" class="collapsible">{{ item.voting_name }}</button>
 <div class="content">
+    <li>Status głosowania: <b>{{ item.voting_status }}</b></li>
+    <li>Frequency: <b>{{ item.frequency }}</b></li>
+    <li><b>Wyniki głosowania:</b></li>
     <img src={{ item.url}} alt="Chart">
 </div>
 {% endfor %}

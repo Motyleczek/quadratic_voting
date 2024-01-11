@@ -102,23 +102,19 @@ def add_users():
 @auth.route('/author_votings', methods=['POST', 'GET'])
 @login_required
 def author_votings():
-    # get_author_votings -> lista głosowań stworzonych przez autora
-    # get_vote_summary -> wyniki głosowania
-    # bar plot do wyświetlania wyników już przygotowany :)
-    data = [
-        {
-            'name': 'Voting 1',
-            'Users': '3',
-            'mob': '7736'
-        },
-        {
-            'name': 'Voting 2',
-            'Users': '6',
-            'mob': '546464'
-        }]
-    for i in range(len(data)):
-        x= ['Opcja 1', 'Opcja 2', 'Opcja 3', 'Opcja 4', 'Opcja 5']
-        y = [1, 2, 5, 3, 4]
+    author_votings =  dbf.get_author_votings(session, current_user.id)
+    data = []
+    for i in range(len(author_votings)):
+        vote_summary = dbf.get_vote_summary(session, author_votings[i][0])
+        data.append({'voting_name': author_votings[i][1], 'voting_status': author_votings[i][2], 'frequency': vote_summary[1]})
+        x = [option[0] for option in vote_summary[0]]
+        y =[]
+        for option in vote_summary[0]:
+            if option[1] is None:
+                y.append(0)
+            else:
+                y.append(option[1])
+        plt.figure()
         plt.bar(x, y)
         dir = f'website/static/results/results_{i}.png'
         data[i]['url'] = f'/static/results/results_{i}.png'
