@@ -126,6 +126,10 @@ def add_vote_results_to_db(session, userid: int, voteid: int, username:str, resu
     uservote_record.lastupdatedon = datetime.now()
     session.commit()
 
+def check_user_did_vote(session, userid: int, voteid: int):
+    did_vote = session.query(UserVote.didvote).filter(UserVote.userid == userid, UserVote.voteid == voteid, UserVote.active == 1).first()
+    return did_vote
+
 
 def add_vote_summary(session, username: str, voteid: int):
     optionid_lst = session.query(VoteDetail.id).filter(VoteDetail.voteid == voteid, VoteDetail.active == 1).all()
@@ -140,12 +144,34 @@ def add_vote_summary(session, username: str, voteid: int):
         vote_detail_record.result = sm
         session.commit()
 
-def get_vote_summary(session, voteid: int) -> Tuple[Dict[str, int], float]:
+
+def get_author_votings(session, userid: int) -> List[Tuple[int, str, str]]:
+    voteid = session.query(UserVote.voteid).filter(UserVote.userid == userid, UserVote.active == 1, UserVote.role == 'Author').all()
+    vote_data = []
+    for i in voteid:
+        data = session.query(Vote.name, Vote.startdate, Vote.enddate).filter(Vote.id == i[0], Vote.active == 1).first()
+        if data[1] < datetime.now() < data[2]:
+            vote_data.append((i[0], data[0], 'Aktywne'))
+        elif data[2] < datetime.now():
+            vote_data.append((i[0], data[0], 'Zakonczone'))
+        else:
+            vote_data.append((i[0], data[0], 'Nierozpoczete'))
+    return vote_data
+
+
+def get_vote_summary(session, voteid: int) -> Tuple[Dict[str, float], float]:
+    """
+    Return dict where key is name of the option and value is voting result; frequency
+    """
+    vote_dates = session.query(Vote.enddate).filter(Vote.id == voteid, Vote.active == 1).first()[0]
+    if vote_dates >= datetime.now():
+        raise AttributeError('Voting is not finished!')
     results = session.query(VoteDetail.optionname, VoteDetail.result).filter(VoteDetail.voteid == voteid, VoteDetail.active == 1).all()
-    # users_lst = session.query(UserVote.userid).filter(UserVote.voteid == voteid and UserVote.active == 1).all()
-    # all_voters = len(users_lst)
-    # voters = 0
-    # for u in users_lst:
+    did_vote_lst = session.query(UserVote.didvote).filter(UserVote.voteid == voteid and UserVote.active == 1, UserVote.role == 'Voter').all()
+    did_vote_lst = [d[0] for d in did_vote_lst]
+    frequency = sum(did_vote_lst) / len(did_vote_lst)
+    return results, frequency
+
 
 
 
