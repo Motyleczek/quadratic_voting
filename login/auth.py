@@ -105,7 +105,7 @@ def author_votings():
     author_votings =  dbf.get_author_votings(session, current_user.id)
     data = []
     for i in range(len(author_votings)):
-        vote_summary = dbf.get_vote_summary(session, author_votings[i][0])
+        vote_summary = dbf.get_vote_summary(session, author_votings[i][0], current_user.username)
         data.append({'voting_name': author_votings[i][1], 'voting_status': author_votings[i][2], 'frequency': vote_summary[1]})
         x = [option[0] for option in vote_summary[0]]
         y =[]

@@ -23,7 +23,7 @@ def get_user_votings(session, userid: int) -> Dict[Tuple[int, str], Tuple[List[T
 
 
 def vote(session, userid: int, voteid: int, username: str, results: Dict[int, int], credit: int):
-    if check_user_did_vote(session, userid, voteid):
+    if check_user_did_vote(session, userid, voteid) == 1:
         raise ValueError('You have already voted!')
     if sum(results.values()) < credit:
         raise ValueError('You do not use all of your credits')

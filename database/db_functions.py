@@ -159,13 +159,18 @@ def get_author_votings(session, userid: int) -> List[Tuple[int, str, str]]:
     return vote_data
 
 
-def get_vote_summary(session, voteid: int) -> Tuple[Dict[str, float], float]:
+def get_vote_summary(session, voteid: int, username: str) -> Tuple[Dict[str, float], float]:
     """
     Return dict where key is name of the option and value is voting result; frequency
     """
     # vote_dates = session.query(Vote.enddate).filter(Vote.id == voteid, Vote.active == 1).first()[0]
     # if vote_dates >= datetime.now():
     #     raise AttributeError('Voting is not finished!')
+    vote_date = session.query(Vote.enddate).filter(Vote.id == voteid, Vote.active == 1).first()[0]
+    if vote_date < datetime.now():
+        res = session.query(VoteDetail.result).filter(VoteDetail.voteid == voteid, VoteDetail.active == 1).first()[0]
+        if not res:
+            add_vote_summary(session, username, voteid)
     results = session.query(VoteDetail.optionname, VoteDetail.result).filter(VoteDetail.voteid == voteid, VoteDetail.active == 1).all()
     did_vote_lst = session.query(UserVote.didvote).filter(UserVote.voteid == voteid and UserVote.active == 1, UserVote.role == 'Voter').all()
     did_vote_lst = [d[0] for d in did_vote_lst]
