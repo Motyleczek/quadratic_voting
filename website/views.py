@@ -13,6 +13,7 @@ import string
 
 import database.database_definitions
 import database.db_functions
+import voting.voting
 
 from typing import List
 from flask_login import current_user
@@ -93,4 +94,50 @@ def vote_creation():
 @views.route("/voting", methods=["GET", "POST"])
 @login_required
 def choose_vote():
-    return render_template("choose_vote.html")
+     
+    # testing = database.db_functions.get_voter_votings(session, current_user.id)
+    # print(testing)
+    
+    vote_deets = database.db_functions.get_voter_votings(session, current_user.id)
+    
+    votes_options_dict = {}
+    votes_credit_dict = {}
+    
+    vote_name_to_id = {}
+    option_name_to_id = {}
+    
+    for vote in vote_deets:
+        vote_id, vote_name = vote
+        vote_name_to_id[vote_name] = vote_id
+        
+        option_list, credit = database.db_functions.get_voting_parameters(session, vote_id)
+        vote_options =[]
+        for option in option_list:
+            option_id, option_name = option
+            option_name_to_id[option_name] = option_id
+            vote_options.append(option_name)
+        
+        votes_credit_dict[vote_name] = credit
+        votes_options_dict[vote_name] = vote_options
+        
+    
+    test_data = [{'votes_opt_dicts': votes_options_dict},
+                  {'votes_credit_dict': votes_credit_dict}]
+    
+    
+    if request.method == 'POST':
+        print(request.form.keys())
+        result_dict = {}
+        vote_id = None
+        for key, val in request.form.items():
+            if key == "vote_name":
+                vote_id = vote_name_to_id[val]
+                continue
+            vote_opt = key
+            vote_credit_val = val
+            vote_opt_id = option_name_to_id[vote_opt]
+            result_dict[vote_opt_id] = int(vote_credit_val)
+
+        voting.voting.vote(session, current_user.id, vote_id, current_user.username, result_dict, votes_credit_dict[vote_name])
+    
+    return render_template("choose_vote.html", data=test_data)

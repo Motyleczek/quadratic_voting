@@ -11,30 +11,29 @@
   
 <!-- Initial list of strings -->
 <select id="dropdown" onchange="updateFields()">
-    <option value="list1">List 1</option>
-    <option value="list2">List 2</option>
+    {%for key, item in data[0]['votes_opt_dicts'].items()%}
+    <option value="{{ key }}">{{ key }}</option>
+    {%endfor%}
     <!-- Add more options as needed -->
 </select>
 
 <!-- Credits input -->
-<label for="credits">Credits:</label>
+<label for="credits">Pozostałe kredyty:</label>
 <input type="number" id="credits" value="100" readonly>
 
 <!-- Container for dynamic sliders -->
-<div id="sliders-container"></div>
+<form id="sliders-container" method="post"></form>
 
 <script>
     // Define your lists
-    var lists = {
-        "list1": ["Field1", "Field2", "Field3"],
-        "list2": ["FieldA", "FieldB", "FieldC", "FieldD"]
-        // Add more lists as needed
-    };
+    var myListofDicts = {{ data | tojson | safe}};
+    console.log(myListofDicts);
+    
+    var lists = myListofDicts[0]['votes_opt_dicts'];
+    console.log(lists)
 
-    var lists_2 = {
-        "list1": 100,
-        "list2": 150
-    };
+    var lists_2 = myListofDicts[1]['votes_credit_dict'];
+    console.log(lists_2);
 
     // Function to update fields based on selected dropdown option
     function updateFields() {
@@ -46,6 +45,12 @@
         
         // Clear previous sliders
         document.getElementById("sliders-container").innerHTML = "";
+        var vote_name = document.createElement("input");
+        vote_name.type = "text";
+        vote_name.value = selectedList;
+        vote_name.name = "vote_name";
+        vote_name.setAttribute("readonly", true);
+        document.getElementById("sliders-container").appendChild(vote_name);
 
         // Create sliders dynamically
         fields.forEach(function (field) {
@@ -70,6 +75,14 @@
 
             document.getElementById("sliders-container").appendChild(sliderContainer);
         });
+        // create submit button
+        var buttonContainer = document.createElement("div");
+        var button = document.createElement("input");
+        button.type = "submit";
+        button.value = "Submit";
+
+        buttonContainer.appendChild(button);
+        document.getElementById("sliders-container").appendChild(buttonContainer);
 
         // Initialize the total
         updateTotal(prev_vals);
@@ -91,7 +104,7 @@
         
         // Update the total credits
         if (total <= credits){
-            document.getElementById("credits").value = total;
+            document.getElementById("credits").value = credits - total;
         }
         
 
