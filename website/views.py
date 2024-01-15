@@ -46,9 +46,9 @@ def vote_creation():
     vote_options: List[str] = []
     
     # data to create the correct user list
-    vote_options = database.db_functions.get_voters_createdby_user(session, current_user.username)
+    vote_users = database.db_functions.get_voters_createdby_user(session, current_user.username)
     data= []
-    for elem in vote_options:
+    for elem in vote_users:
         data.append({'name': elem})
     
     
