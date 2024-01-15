@@ -45,6 +45,13 @@ def vote_creation():
     num_credits : int = None
     vote_options: List[str] = []
     
+    # data to create the correct user list
+    vote_options = database.db_functions.get_voters_createdby_user(session, current_user.username)
+    data= []
+    for elem in vote_options:
+        data.append({'name': elem})
+    
+    
     if request.method == "POST":
        # getting input with name = fname in HTML form
        title = request.form.get("title")
@@ -53,12 +60,17 @@ def vote_creation():
        data_end = request.form.get("data_end")
        vote_type = request.form.get("vote_type")
        num_credits = request.form.get("credits")
+       
+       # all fields starting with input --> will be the vote options
+       print(request.form.getlist('selected_options[]'))
        for key in request.form.keys():
+           print(key)
            if len(key) >= 6:
             if key[:5] == 'input':
                     vote_option_x = request.form.get(key)
                     vote_options.append(vote_option_x)
-       
+        
+       # TODO odkomentować po testach
        vote_id = database.db_functions.create_voting(session, 
                               name=title,
                               start_date = data_start,
@@ -70,9 +82,13 @@ def vote_creation():
                                       voteid=vote_id,
                                       option_list=vote_options,
                                       createdby=current_user.username)
+       
+       chosen_users = request.form.getlist('selected_options[]')
+       database.db_functions.add_users_to_voting(session, vote_id, chosen_users, current_user.username)
+    
         
     
-    return render_template("vote_creation.html")
+    return render_template("vote_creation.html", data = data)
 
 @views.route("/voting", methods=["GET", "POST"])
 @login_required

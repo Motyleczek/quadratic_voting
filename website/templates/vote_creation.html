@@ -2,6 +2,21 @@
 
 {% block head %}
 <title>Vote_creation </title>
+<style>
+  
+  .checkboxes label {
+    display: block;
+    padding-right: 10px;
+    padding-left: 22px;
+    text-indent: -22px;
+  }
+  .checkboxes input {
+    vertical-align: middle;
+  }
+  .checkboxes label span {
+    vertical-align: middle;
+  }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -26,6 +41,14 @@
         <option value="rankingowe"> Rankingowe </option>
       </select>
     <br>
+    
+    <label>Osoby głosujące (wybrać trzymając ctrl):</label>
+    <select id="options" name="selected_options[]" multiple>
+      {% for item in data %}
+          <option value="{{ item['name'] }}">{{ item['name'] }}</option>
+      {% endfor %}
+   </select>
+    
     <label for="credits">Ilość dostępnych kredytów (optymalnie ~ilość opcji do kwadratu)</label>
     <input type="number" id="credits" name="credits">
     <br>
